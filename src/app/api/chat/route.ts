@@ -1,12 +1,12 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { streamText, StreamingTextResponse } from 'ai';
 
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
     const { messages } = await req.json();
 
-    const result = streamText({
+    const result = await streamText({
         model: openai('gpt-4o-mini'),
         messages,
         system: `You are the friendly and helpful customer support chatbot for TrialLock. 
@@ -24,5 +24,5 @@ export async function POST(req: Request) {
     answer the user in the language they speak to you in.`
     });
 
-    return result.toDataStreamResponse();
+    return new StreamingTextResponse(result.toAIStream());
 }

@@ -22,7 +22,7 @@ export default function Chatbot() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 w-[350px] sm:w-[400px] h-[500px] mb-4 flex flex-col overflow-hidden"
+                        className="bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 w-[350px] sm-[400px] h-[500px] mb-4 flex flex-col overflow-hidden"
                     >
                         {/* Header */}
                         <div className="bg-primary text-white p-4 flex justify-between items-center rounded-t-2xl">
@@ -46,8 +46,8 @@ export default function Chatbot() {
                             {messages.map((m) => (
                                 <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${m.role === 'user'
-                                            ? 'bg-primary text-white rounded-br-sm'
-                                            : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-sm shadow-sm'
+                                        ? 'bg-primary text-white rounded-br-sm'
+                                        : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-sm shadow-sm'
                                         }`}>
                                         {m.content}
                                     </div>
