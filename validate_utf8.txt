@@ -1,0 +1,65 @@
+﻿node.exe : Loaded Pris
+ma config from prisma.
+config.ts.
+At line:1 char:1
++ & "C:\Program Files\
+nodejs/node.exe" "C:\P
+rogram Files\nodejs/no
+de_mo ...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (Loaded Pri   
+ sma c...isma.conf    
+ig.ts.:String) []    ,
+ RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+
+Prisma schema loaded f
+rom prisma\schema.pris
+ma.
+
+Error: Prisma schema v
+alidation - (validate 
+wasm)
+Error code: P1012
+[1;91merror[0m: [1m
+The datasource propert
+y `url` is no longer s
+upported in schema fil
+es. Move connection UR
+Ls for Migrate to `pri
+sma.config.ts` and pas
+s either `adapter` for
+ a direct database con
+nection or `accelerate
+Url` for Accelerate to
+ the `PrismaClient` co
+nstructor. See https:/
+/pris.ly/d/config-data
+source and https://pri
+s.ly/d/prisma7-client-
+config[0m
+  [1;94m-->[0m  [4m
+prisma\schema.prisma:7
+[0m
+[1;94m   | [0m
+[1;94m 6 | [0m  prov
+ider = "sqlite"
+[1;94m 7 | [0m  [1;
+91murl      = "file:./
+dev.db"[0m
+[1;94m   | [0m
+
+Validation Error Count
+: 1
+[Context: validate]
+
+Prisma CLI Version : 7
+.4.2
