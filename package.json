@@ -10,9 +10,11 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.41",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
     "@types/pg": "^8.18.0",
+    "ai": "^6.0.116",
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.35.1",
     "jose": "^6.2.0",
