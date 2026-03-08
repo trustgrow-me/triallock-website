@@ -1,9 +1,7 @@
-import Link from "next/link";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-    title: "TrialLock | Security Infrastructure",
-};
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function SecurityPage() {
     return (
@@ -36,7 +34,12 @@ export default function SecurityPage() {
                     <div className="layout-content-container flex flex-col max-w-[1200px] w-full px-6 md:px-10 py-12">
                         {/* Hero Section */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
-                            <div className="flex flex-col gap-6">
+                            <motion.div
+                                initial={{ opacity: 0, x: -30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6 }}
+                                className="flex flex-col gap-6"
+                            >
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary dark:bg-primary/30 dark:text-slate-300 text-xs font-bold uppercase tracking-wider w-fit">
                                     <span className="material-symbols-outlined text-sm">verified_user</span>
                                     Certified Secure
@@ -48,15 +51,20 @@ export default function SecurityPage() {
                                     TrialLock uses AES-256 encryption and PCI DSS compliance to ensure your financial data remains private, protected, and under your total control.
                                 </p>
                                 <div className="flex flex-wrap gap-4">
-                                    <Link href="/login" className="flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-colors">
+                                    <Link href="/login" className="flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all">
                                         Get Started Now
                                     </Link>
                                     <Link href="/privacy-policy" className="flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-base font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                                         View Compliance
                                     </Link>
                                 </div>
-                            </div>
-                            <div className="relative">
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                className="relative"
+                            >
                                 <div className="w-full aspect-video md:aspect-square bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-2xl bg-cover bg-center" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDWxGTHQZ2AYJTJBh3vHRUEs7HrbnlStI4fqmCqDRLgORz31jRMHV-wFw1ZMRvLQoE9NL1W384PuCSFEX7a7zQxtEelzauIPIlNXYY4wDDVpZ4A3YEc5ycCcrvRdaLVsGr8Uz-g06s1HgR-yTRFtDIvZ0igbSiVdR4cfXqGgUtRhmOOu5DUHt-dKjVv2az8_W6-wms3_YmvmL6_nCXAFR3Ee4iQbt5yoxhgppBQltS8Ic9P4CaMuxRaGOmbEYEUTNYX38fJIRMUHUY-")' }}>
                                 </div>
                                 <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-900 p-6 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-4">
@@ -68,7 +76,7 @@ export default function SecurityPage() {
                                         <p className="text-lg font-bold dark:text-white">Active Protection</p>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
 
                         {/* Trust Metrics */}
@@ -110,7 +118,7 @@ export default function SecurityPage() {
                                 </p>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                <div className="flex flex-col gap-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 hover:border-primary/50 transition-all group">
+                                <motion.div whileHover={{ y: -5 }} className="flex flex-col gap-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 hover:border-primary/50 transition-all group">
                                     <div className="w-12 h-12 bg-primary/10 dark:bg-primary/30 rounded-lg flex items-center justify-center text-primary dark:text-slate-300 group-hover:bg-primary group-hover:text-white transition-colors">
                                         <span className="material-symbols-outlined text-2xl">credit_card</span>
                                     </div>
@@ -120,8 +128,8 @@ export default function SecurityPage() {
                                             Create unique, single-use, or merchant-specific card numbers. Even if a site is breached, your real account remains invisible and safe.
                                         </p>
                                     </div>
-                                </div>
-                                <div className="flex flex-col gap-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 hover:border-primary/50 transition-all group">
+                                </motion.div>
+                                <motion.div whileHover={{ y: -5 }} className="flex flex-col gap-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 hover:border-primary/50 transition-all group">
                                     <div className="w-12 h-12 bg-primary/10 dark:bg-primary/30 rounded-lg flex items-center justify-center text-primary dark:text-slate-300 group-hover:bg-primary group-hover:text-white transition-colors">
                                         <span className="material-symbols-outlined text-2xl">lock</span>
                                     </div>
@@ -131,8 +139,8 @@ export default function SecurityPage() {
                                             Your primary funding sources are stored in an isolated, hardware-security-module (HSM) protected environment with zero external access.
                                         </p>
                                     </div>
-                                </div>
-                                <div className="flex flex-col gap-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 hover:border-primary/50 transition-all group">
+                                </motion.div>
+                                <motion.div whileHover={{ y: -5 }} className="flex flex-col gap-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 hover:border-primary/50 transition-all group">
                                     <div className="w-12 h-12 bg-primary/10 dark:bg-primary/30 rounded-lg flex items-center justify-center text-primary dark:text-slate-300 group-hover:bg-primary group-hover:text-white transition-colors">
                                         <span className="material-symbols-outlined text-2xl">privacy_tip</span>
                                     </div>
@@ -142,12 +150,18 @@ export default function SecurityPage() {
                                             Prevent data brokers from tracking your spending habits. TrialLock masks your transaction metadata to preserve financial privacy.
                                         </p>
                                     </div>
-                                </div>
+                                </motion.div>
                             </div>
                         </div>
 
                         {/* Security Badge Section */}
-                        <div className="mt-20 py-12 px-8 rounded-2xl bg-primary text-white flex flex-col items-center text-center gap-8">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="mt-20 py-12 px-8 rounded-2xl bg-primary text-white flex flex-col items-center text-center gap-8"
+                        >
                             <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-80">
                                 <div className="flex flex-col items-center gap-2">
                                     <span className="material-symbols-outlined text-4xl">admin_panel_settings</span>
@@ -169,9 +183,9 @@ export default function SecurityPage() {
                             <div className="max-w-2xl">
                                 <h2 className="text-3xl font-bold mb-4">Ready to secure your subscriptions?</h2>
                                 <p className="text-slate-300 mb-8">Join over 500,000 users who trust TrialLock to protect their financial future every day.</p>
-                                <Link href="/register" className="bg-white text-primary font-bold py-3 px-8 rounded-lg hover:bg-slate-100 transition-colors">Create Secure Account</Link>
+                                <Link href="/register" className="bg-white text-primary font-bold py-3 px-8 rounded-lg hover:bg-slate-100 hover:scale-105 transition-all">Create Secure Account</Link>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Final Footer Section */}
                         <footer className="mt-20 pt-12 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 w-full">
@@ -200,7 +214,7 @@ export default function SecurityPage() {
                             <div>
                                 <h4 className="font-bold mb-4">Resources</h4>
                                 <ul className="text-slate-500 dark:text-slate-400 text-sm flex flex-col gap-2">
-                                    <li><Link className="hover:text-primary" href="#">Help Center</Link></li>
+                                    <li><Link className="hover:text-primary" href="/how-it-works">Help Center</Link></li>
                                     <li><Link className="hover:text-primary" href="/privacy-policy">Privacy Policy</Link></li>
                                 </ul>
                             </div>

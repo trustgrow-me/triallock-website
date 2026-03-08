@@ -1,9 +1,7 @@
-import Link from "next/link";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-    title: "Pricing - TrialLock",
-};
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function PricingPage() {
     return (
@@ -38,18 +36,28 @@ export default function PricingPage() {
                 <main className="flex flex-col items-center justify-center px-4 py-16 lg:py-24">
                     <div className="max-w-[960px] w-full flex flex-col gap-12">
                         {/* Hero Section */}
-                        <div className="text-center flex flex-col gap-4">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            className="text-center flex flex-col gap-4"
+                        >
                             <h1 className="text-4xl md:text-6xl font-black tracking-tight text-primary dark:text-slate-100">
                                 Simple, honest pricing.
                             </h1>
                             <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                                 Stop unwanted subscription charges before they happen. One plan, everything you need to stay in control.
                             </p>
-                        </div>
+                        </motion.div>
 
                         {/* Pricing Card */}
-                        <div className="flex justify-center">
-                            <div className="w-full max-w-[480px] flex flex-col gap-6 rounded-xl border border-primary/10 bg-white dark:bg-slate-900 p-8 shadow-xl shadow-primary/5">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="flex justify-center"
+                        >
+                            <div className="w-full max-w-[480px] flex flex-col gap-6 rounded-xl border border-primary/10 bg-white dark:bg-slate-900 p-8 shadow-xl shadow-primary/5 hover:border-primary/30 transition-all">
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center justify-between">
                                         <h2 className="text-xl font-bold text-primary dark:text-slate-100">Pro Plan</h2>
@@ -87,10 +95,16 @@ export default function PricingPage() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Comparison Table */}
-                        <div className="mt-12">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="mt-12"
+                        >
                             <h2 className="text-2xl font-bold text-primary dark:text-slate-100 mb-8 text-center md:text-left">Compare Plans</h2>
                             <div className="overflow-x-auto rounded-xl border border-primary/10 bg-white dark:bg-slate-900 shadow-sm">
                                 <table className="w-full text-left border-collapse">
@@ -134,7 +148,7 @@ export default function PricingPage() {
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Trusted By Section (Minimalist) */}
                         <div className="mt-8 py-10 border-t border-primary/10 text-center">
@@ -148,7 +162,13 @@ export default function PricingPage() {
                         </div>
 
                         {/* FAQ Section (Minimalist) */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-12">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="grid grid-cols-1 md:grid-cols-2 gap-8 py-12"
+                        >
                             <div className="flex flex-col gap-2">
                                 <h4 className="font-bold text-primary dark:text-slate-100">Can I cancel anytime?</h4>
                                 <p className="text-sm text-slate-600 dark:text-slate-400">Yes, you can cancel your subscription from your dashboard with a single click. No hidden fees or retention calls.</p>
@@ -165,7 +185,7 @@ export default function PricingPage() {
                                 <h4 className="font-bold text-primary dark:text-slate-100">Are my details safe?</h4>
                                 <p className="text-sm text-slate-600 dark:text-slate-400">We use AES-256 encryption and bank-level security protocols. Your real bank details are never shared with merchants.</p>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                 </main>
 

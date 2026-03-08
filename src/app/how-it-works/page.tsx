@@ -1,9 +1,7 @@
-import Link from "next/link";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-    title: "How it Works | TrialLock",
-};
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function HowItWorksPage() {
     return (
@@ -34,7 +32,12 @@ export default function HowItWorksPage() {
                     {/* Hero Section */}
                     <section className="px-6 md:px-20 lg:px-40 py-16 md:py-24">
                         <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                            <div className="flex flex-col gap-8">
+                            <motion.div
+                                initial={{ opacity: 0, x: -30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6 }}
+                                className="flex flex-col gap-8"
+                            >
                                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-100 text-xs font-bold uppercase tracking-wider w-fit">
                                     Financial Protection
                                 </div>
@@ -45,15 +48,20 @@ export default function HowItWorksPage() {
                                     Experience true financial freedom. Use our virtual trial cards to sign up for any service without the fear of hidden renewal fees or unwanted charges.
                                 </p>
                                 <div className="flex flex-wrap gap-4">
-                                    <Link href="/login" className="inline-flex items-center justify-center bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all">
+                                    <Link href="/login" className="inline-flex items-center justify-center bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-all shadow-xl shadow-primary/20">
                                         Create your first card
                                     </Link>
                                     <button className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
                                         Watch demo
                                     </button>
                                 </div>
-                            </div>
-                            <div className="relative group">
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                className="relative group"
+                            >
                                 <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-transparent rounded-3xl blur-2xl opacity-50"></div>
                                 <div className="relative w-full bg-slate-200 dark:bg-slate-800 rounded-3xl aspect-square overflow-hidden shadow-2xl border border-slate-200/50 dark:border-slate-700/50 relative">
                                     <div className="absolute inset-0 flex flex-col p-8 justify-between bg-gradient-to-br from-primary to-[#1a2e4c] text-white">
@@ -79,7 +87,7 @@ export default function HowItWorksPage() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
                     </section>
 
@@ -92,7 +100,7 @@ export default function HowItWorksPage() {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 {/* Step 1 */}
-                                <div className="group flex flex-col gap-6 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 transition-all hover:shadow-xl hover:-translate-y-1 bg-background-light dark:bg-background-dark">
+                                <motion.div whileHover={{ y: -10 }} className="group flex flex-col gap-6 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 transition-all hover:shadow-xl bg-background-light dark:bg-background-dark">
                                     <div className="size-14 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                         <span className="material-symbols-outlined text-3xl">add_card</span>
                                     </div>
@@ -102,9 +110,9 @@ export default function HowItWorksPage() {
                                             Create a unique virtual card in seconds. Instantly get a CVV, card number, and expiry date specifically for your next trial.
                                         </p>
                                     </div>
-                                </div>
+                                </motion.div>
                                 {/* Step 2 */}
-                                <div className="group flex flex-col gap-6 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 transition-all hover:shadow-xl hover:-translate-y-1 bg-background-light dark:bg-background-dark">
+                                <motion.div whileHover={{ y: -10 }} className="group flex flex-col gap-6 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 transition-all hover:shadow-xl bg-background-light dark:bg-background-dark">
                                     <div className="size-14 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                         <span className="material-symbols-outlined text-3xl">shopping_cart_checkout</span>
                                     </div>
@@ -114,9 +122,9 @@ export default function HowItWorksPage() {
                                             Use your TrialLock card details at checkout for any subscription service like Netflix, Spotify, or SaaS tools.
                                         </p>
                                     </div>
-                                </div>
+                                </motion.div>
                                 {/* Step 3 */}
-                                <div className="group flex flex-col gap-6 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 transition-all hover:shadow-xl hover:-translate-y-1 bg-background-light dark:bg-background-dark">
+                                <motion.div whileHover={{ y: -10 }} className="group flex flex-col gap-6 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 transition-all hover:shadow-xl bg-background-light dark:bg-background-dark">
                                     <div className="size-14 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                         <span className="material-symbols-outlined text-3xl">block</span>
                                     </div>
@@ -126,7 +134,7 @@ export default function HowItWorksPage() {
                                             The card automatically declines any charges after the trial period ends. We stop the payment before it reaches your bank.
                                         </p>
                                     </div>
-                                </div>
+                                </motion.div>
                             </div>
                         </div>
                     </section>
@@ -189,7 +197,13 @@ export default function HowItWorksPage() {
 
                     {/* CTA Section */}
                     <section className="px-6 md:px-20 lg:px-40 py-24">
-                        <div className="max-w-[1200px] mx-auto bg-primary rounded-[2.5rem] p-12 md:p-20 text-center text-white relative overflow-hidden">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="max-w-[1200px] mx-auto bg-primary rounded-[2.5rem] p-12 md:p-20 text-center text-white relative overflow-hidden"
+                        >
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)]"></div>
                             <h2 className="text-4xl md:text-5xl font-black mb-8 relative z-10">Stop paying for forgotten trials.</h2>
                             <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 relative z-10">
@@ -199,7 +213,7 @@ export default function HowItWorksPage() {
                                 <Link href="/login" className="inline-flex items-center justify-center bg-white text-primary px-10 py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all">Get Started Free</Link>
                                 <Link href="/pricing" className="inline-flex items-center justify-center bg-white/10 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-white/20 transition-all">View Pricing</Link>
                             </div>
-                        </div>
+                        </motion.div>
                     </section>
                 </main>
 

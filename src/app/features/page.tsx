@@ -1,10 +1,7 @@
-import Link from "next/link";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-    title: "TrialLock - Advanced Features",
-    description: "Complete Control Over Every Dollar.",
-};
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function FeaturesPage() {
     return (
@@ -39,7 +36,12 @@ export default function FeaturesPage() {
                 <section className="py-16 md:py-24">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex flex-col lg:flex-row items-center gap-12">
-                            <div className="flex-1 space-y-6">
+                            <motion.div
+                                initial={{ opacity: 0, x: -30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6 }}
+                                className="flex-1 space-y-6"
+                            >
                                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
                                     Subscriptions Secured
                                 </div>
@@ -50,20 +52,25 @@ export default function FeaturesPage() {
                                     Never forget to cancel a free trial again. Our suite of security tools ensures you only pay for what you actually use.
                                 </p>
                                 <div className="flex flex-wrap gap-4">
-                                    <Link href="/login" className="inline-flex items-center justify-center bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all">
+                                    <Link href="/login" className="inline-flex items-center justify-center bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-all">
                                         Start Free Trial
                                     </Link>
-                                    <button className="border-2 border-slate-200 dark:border-slate-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                    <Link href="/how-it-works" className="border-2 text-center border-slate-200 dark:border-slate-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                                         Watch Demo
-                                    </button>
+                                    </Link>
                                 </div>
-                            </div>
-                            <div className="flex-1 w-full max-w-2xl">
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, x: 30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                className="flex-1 w-full max-w-2xl"
+                            >
                                 <div className="aspect-video bg-gradient-to-br from-primary to-slate-800 rounded-2xl shadow-2xl relative overflow-hidden flex items-center justify-center border-8 border-white/10">
                                     <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
                                     <span className="material-symbols-outlined text-white text-9xl opacity-20">payments</span>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </section>
@@ -77,7 +84,7 @@ export default function FeaturesPage() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {/* Feature 1 */}
-                            <div className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+                            <motion.div whileHover={{ y: -5 }} className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all">
                                 <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                                     <span className="material-symbols-outlined text-primary text-3xl">credit_card</span>
                                 </div>
@@ -93,9 +100,9 @@ export default function FeaturesPage() {
                                         <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span> One-click creation via browser extension
                                     </li>
                                 </ul>
-                            </div>
+                            </motion.div>
                             {/* Feature 2 */}
-                            <div className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+                            <motion.div whileHover={{ y: -5 }} className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all">
                                 <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                                     <span className="material-symbols-outlined text-primary text-3xl">timer_off</span>
                                 </div>
@@ -111,9 +118,9 @@ export default function FeaturesPage() {
                                         <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span> Notification before card expiry
                                     </li>
                                 </ul>
-                            </div>
+                            </motion.div>
                             {/* Feature 3 */}
-                            <div className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+                            <motion.div whileHover={{ y: -5 }} className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all">
                                 <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                                     <span className="material-symbols-outlined text-primary text-3xl">lock_person</span>
                                 </div>
@@ -129,9 +136,9 @@ export default function FeaturesPage() {
                                         <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span> Automated merchant detection
                                     </li>
                                 </ul>
-                            </div>
+                            </motion.div>
                             {/* Feature 4 */}
-                            <div className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+                            <motion.div whileHover={{ y: -5 }} className="bg-white dark:bg-background-dark p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all">
                                 <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                                     <span className="material-symbols-outlined text-primary text-3xl">shield_with_heart</span>
                                 </div>
@@ -147,7 +154,7 @@ export default function FeaturesPage() {
                                         <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span> Master kill-switch for all cards
                                     </li>
                                 </ul>
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </section>
@@ -295,8 +302,8 @@ export default function FeaturesPage() {
                         <div>
                             <h4 className="font-bold text-sm mb-4 uppercase tracking-wider">Resources</h4>
                             <ul className="space-y-2 text-sm text-slate-500">
-                                <li><Link className="hover:text-primary" href="#">Blog</Link></li>
-                                <li><Link className="hover:text-primary" href="#">Help Center</Link></li>
+                                <li><Link className="hover:text-primary" href="/how-it-works">Blog</Link></li>
+                                <li><Link className="hover:text-primary" href="/how-it-works">Help Center</Link></li>
                             </ul>
                         </div>
                         <div>
@@ -311,8 +318,8 @@ export default function FeaturesPage() {
                     <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-xs text-slate-400">© 2024 TrialLock. All rights reserved.</p>
                         <div className="flex gap-6">
-                            <Link className="text-slate-400 hover:text-primary" href="#"><span className="material-symbols-outlined text-xl">public</span></Link>
-                            <Link className="text-slate-400 hover:text-primary" href="#"><span className="material-symbols-outlined text-xl">alternate_email</span></Link>
+                            <Link className="text-slate-400 hover:text-primary" href="/privacy-policy"><span className="material-symbols-outlined text-xl">public</span></Link>
+                            <Link className="text-slate-400 hover:text-primary" href="/how-it-works"><span className="material-symbols-outlined text-xl">alternate_email</span></Link>
                         </div>
                     </div>
                 </div>

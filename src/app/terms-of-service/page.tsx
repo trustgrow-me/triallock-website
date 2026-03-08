@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-    title: "Terms of Service - TrialLock",
-};
+import Link from "next/link";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function TermsOfServicePage() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     return (
         <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
             <div className="layout-container flex h-full grow flex-col">
@@ -22,22 +22,52 @@ export default function TermsOfServicePage() {
                             <Link className="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" href="/features">Features</Link>
                             <Link className="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" href="/pricing">Pricing</Link>
                         </nav>
-                        <Link href="/login" className="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95 shadow-sm">
+                        <Link href="/login" className="hidden md:flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95 shadow-sm">
                             <span>Sign Up</span>
                         </Link>
+                        {/* Mobile Menu Toggle */}
+                        <div className="md:hidden flex items-center">
+                            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-slate-900 dark:text-white p-2">
+                                <span className="material-symbols-outlined text-2xl">{isMobileMenuOpen ? 'close' : 'menu'}</span>
+                            </button>
+                        </div>
                     </div>
                 </header>
+
+                {/* Mobile Menu Overlay */}
+                <AnimatePresence>
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="md:hidden bg-white dark:bg-slate-900 border-b border-primary/10 px-6 py-4 flex flex-col gap-4 overflow-hidden"
+                        >
+                            <Link href="/features" className="text-sm font-medium hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>Features</Link>
+                            <Link href="/security" className="text-sm font-medium hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>Security</Link>
+                            <Link href="/pricing" className="text-sm font-medium hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
+                            <Link href="/login" className="flex items-center justify-center rounded-lg h-10 px-5 bg-primary text-slate-50 text-sm font-bold mt-2" onClick={() => setIsMobileMenuOpen(false)}>
+                                Sign In
+                            </Link>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 <main className="flex flex-1 justify-center py-10 px-4 md:px-0">
                     <div className="layout-content-container flex flex-col max-w-[800px] flex-1">
                         {/* Title & Updated Date */}
-                        <div className="flex flex-col gap-3 mb-8">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="flex flex-col gap-3 mb-8"
+                        >
                             <h1 className="text-slate-900 dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-tight">Terms of Service</h1>
                             <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                                 <span className="material-symbols-outlined text-sm">schedule</span>
                                 <p className="text-sm font-medium">Last updated: May 24, 2024</p>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Sticky Sub-Nav */}
                         <div className="pb-6 sticky top-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm z-40 border-b border-slate-200 dark:border-slate-800">
@@ -144,14 +174,20 @@ export default function TermsOfServicePage() {
                         </div>
 
                         {/* Bottom CTA */}
-                        <div className="mt-12 p-8 bg-primary rounded-2xl text-center shadow-xl">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                            className="mt-12 p-8 bg-primary rounded-2xl text-center shadow-xl"
+                        >
                             <h3 className="text-white text-2xl font-bold mb-4">Ready to lock your trials?</h3>
                             <p className="text-slate-300 mb-8 max-w-md mx-auto">Join thousands of users who never pay for a forgotten subscription again.</p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <Link href="/login" className="bg-white text-primary px-8 py-3 rounded-lg font-bold hover:bg-slate-100 transition-colors">Start for Free</Link>
                                 <Link href="/pricing" className="bg-primary border border-slate-700 text-white px-8 py-3 rounded-lg font-bold hover:bg-slate-800 transition-colors">View Pricing</Link>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                 </main>
 
