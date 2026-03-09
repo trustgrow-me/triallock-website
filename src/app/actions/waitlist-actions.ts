@@ -103,7 +103,7 @@ export async function getWaitlistStats() {
             remaining: Math.max(TARGET - totalCount, 0)
         };
     } catch (err) {
-        return { totalCount: BASELINE, target: TARGET, percentage: 80, remaining: 200 };
+        return { totalCount: BASELINE, target: TARGET, percentage: "80.0", remaining: 200 };
     }
 }
 
