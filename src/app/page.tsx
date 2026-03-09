@@ -1,435 +1,355 @@
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { joinWaitlist, getWaitlistStats } from './actions/waitlist-actions';
+import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function Home() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+export default function WaitlistLandingPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const refCode = searchParams.get('ref') || '';
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const [stats, setStats] = useState({ totalCount: 800, target: 1000, percentage: "80.0", remaining: 200 });
+
+  useEffect(() => {
+    async function loadStats() {
+      const data = await getWaitlistStats();
+      if (data) setStats(data);
+    }
+    loadStats();
+  }, []);
+
+  async function handleJoin(formData: FormData) {
+    setIsLoading(true);
+    setError('');
+
+    // Add referral code to the form data safely if it exists
+    if (refCode) {
+      formData.append('ref', refCode);
+    }
+
+    const result = await joinWaitlist(formData);
+
+    setIsLoading(false);
+
+    if (result.error) {
+      setError(result.error);
+    } else if (result.success && result.entryId) {
+      router.push(`/thank-you?id=${result.entryId}`);
+    }
+  }
+
   return (
-    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
-      {/* Top Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-primary text-white p-1.5 rounded-lg">
-              <span className="material-symbols-outlined block">shield_lock</span>
+    <div className="bg-white text-primary font-display antialiased min-h-screen relative overflow-hidden">
+      {/* Header */}
+      <header className="max-w-7xl mx-auto px-6 py-8 flex items-center justify-between relative z-10">
+        <div className="flex items-center gap-2">
+          <div className="bg-primary p-2 rounded-lg">
+            <span className="material-symbols-outlined text-white text-2xl">shield_lock</span>
+          </div>
+          <span className="text-xl font-bold tracking-tight text-primary">TrialLock</span>
+        </div>
+        <div>
+          <a className="text-sm font-semibold text-primary hover:text-accent transition-colors" href="#join">Early Access</a>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="max-w-7xl mx-auto px-6 pt-12 pb-24 lg:pt-20 lg:pb-32 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-8 max-w-2xl"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-bold">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+              </span>
+              Limited Beta Enrollment
             </div>
-            <span className="text-xl font-bold tracking-tight text-primary dark:text-white">TrialLock</span>
-          </div>
-          <div className="hidden md:flex items-center gap-10">
-            <Link className="text-sm font-medium hover:text-accent transition-colors" href="/how-it-works">How it works</Link>
-            <Link className="text-sm font-medium hover:text-accent transition-colors" href="/features">Features</Link>
-            <Link className="text-sm font-medium hover:text-accent transition-colors" href="/pricing">Pricing</Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden sm:block text-sm font-semibold px-4 py-2 hover:text-accent">
-              Log in
-            </Link>
-            <Link href="/request-card" className="hidden md:flex bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-800 transition-all shadow-sm">
-              Get Started
-            </Link>
-            {/* Mobile Menu Toggle */}
-            <div className="md:hidden flex items-center">
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-slate-900 dark:text-white p-2">
-                <span className="material-symbols-outlined text-2xl">{isMobileMenuOpen ? 'close' : 'menu'}</span>
+
+            <h1 className="text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight">
+              Start free trials without <span className="text-accent">surprise charges</span>
+            </h1>
+
+            <p className="text-lg text-slate-600 leading-relaxed max-w-xl">
+              TrialLock is a virtual card built for free trials. Use it to sign up for trials and avoid unwanted subscription renewals after the trial ends.
+            </p>
+
+            <form action={handleJoin} id="join" className="flex flex-col sm:flex-row gap-3 relative">
+              <div className="flex-1 flex flex-col gap-2">
+                <input
+                  name="firstName"
+                  required
+                  className="w-full px-5 py-4 rounded-xl border-slate-200 bg-slate-50 focus:ring-2 focus:ring-accent focus:border-accent transition-all text-slate-900"
+                  placeholder="First Name"
+                  type="text"
+                />
+              </div>
+
+              <div className="flex-1 flex flex-col gap-2">
+                <input
+                  name="email"
+                  required
+                  className="w-full px-5 py-4 rounded-xl border-slate-200 bg-slate-50 focus:ring-2 focus:ring-accent focus:border-accent transition-all text-slate-900"
+                  placeholder="Email Address"
+                  type="email"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-primary/20 whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <span className="material-symbols-outlined animate-spin text-sm">autorenew</span>
+                    Joining...
+                  </>
+                ) : (
+                  'Join Early Access'
+                )}
               </button>
+            </form>
+
+            {error && (
+              <p className="text-red-500 text-sm font-medium mt-2">{error}</p>
+            )}
+
+            {/* Launch Progress */}
+            <div className="space-y-3 pt-4">
+              <div className="flex justify-between items-end">
+                <span className="text-sm font-bold text-slate-900">{stats.totalCount} / {stats.target} early users joined</span>
+                <span className="text-sm font-medium text-slate-500">{stats.percentage}%</span>
+              </div>
+              <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${stats.percentage}%` }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                  className="bg-accent h-full rounded-full"
+                />
+              </div>
+              <p className="text-xs text-slate-500 font-medium">{stats.remaining} more people needed before public launch</p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative"
+          >
+            <div className="absolute -top-20 -right-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl -z-10"></div>
+            <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+
+            {/* Virtual Card Illustration */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-primary to-[#1a3a6e] w-full aspect-[1.58/1] rounded-2xl p-8 text-white shadow-2xl transform rotate-2 group-hover:rotate-0 transition-transform duration-500 flex flex-col justify-between">
+                <div className="flex justify-between items-start">
+                  <span className="material-symbols-outlined text-4xl opacity-80">contactless</span>
+                  <div className="w-12 h-8 bg-amber-400/20 rounded-md border border-white/20"></div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="text-2xl font-mono tracking-widest">**** **** **** 8824</div>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <div className="text-[10px] uppercase tracking-tighter opacity-60">Card Holder</div>
+                      <div className="text-sm font-bold tracking-wide uppercase">TrialLock Member</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] uppercase tracking-tighter opacity-60">Expires</div>
+                      <div className="text-sm font-bold tracking-wide">09/28</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Overlay Label */}
+                <div className="absolute top-4 right-4 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">
+                  Trial Mode Active
+                </div>
+              </div>
+
+              {/* Secondary Decoration Card */}
+              <div className="absolute -bottom-6 -right-6 -z-10 bg-slate-100 w-full aspect-[1.58/1] rounded-2xl border border-slate-200 shadow-xl opacity-50 transform -rotate-3 transition-transform group-hover:-rotate-1"></div>
+            </div>
+          </motion.div>
+        </div>
+      </main>
+
+      {/* Trust Micro-Bar */}
+      <section className="bg-slate-50 border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 py-10">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="flex items-center gap-4">
+              <span className="material-symbols-outlined text-accent bg-white p-2 rounded-lg shadow-sm">payments</span>
+              <span className="text-sm font-bold text-slate-700">Transparent pricing at launch</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="material-symbols-outlined text-accent bg-white p-2 rounded-lg shadow-sm">style</span>
+              <span className="text-sm font-bold text-slate-700">One active trial card at a time</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="material-symbols-outlined text-accent bg-white p-2 rounded-lg shadow-sm">block</span>
+              <span className="text-sm font-bold text-slate-700">Built to stop surprise renewals</span>
             </div>
           </div>
         </div>
-      </nav>
+      </section>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-slate-900 border-b border-primary/10 px-6 py-4 flex flex-col gap-4 overflow-hidden fixed top-20 left-0 right-0 z-40 shadow-xl"
-          >
-            <Link href="/how-it-works" className="text-base font-bold hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>How it works</Link>
-            <Link href="/features" className="text-base font-bold hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>Features</Link>
-            <Link href="/pricing" className="text-base font-bold hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
-            <Link href="/request-card" className="flex items-center justify-center rounded-xl h-12 bg-primary text-slate-50 text-base font-bold mt-2" onClick={() => setIsMobileMenuOpen(false)}>
-              Get Started
-            </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <main>
-        {/* Hero Section */}
-        <section className="relative pt-20 pb-32 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-col gap-8"
-            >
-              <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-3 py-1 rounded-full w-fit">
-                <span className="text-xs font-bold tracking-wider uppercase">New: Merchant-Locked Cards</span>
-              </div>
-              <h1 className="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight text-primary dark:text-white">
-                Start free trials without <span className="text-accent italic">getting charged.</span>
-              </h1>
-              <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
-                Generate a virtual TrialLock card and block unwanted subscription renewals automatically. One card, one trial, zero stress.
+      {/* Problem/Solution */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+            <div className="lg:w-1/2 space-y-6">
+              <h2 className="text-4xl font-black tracking-tight leading-tight">
+                Free trials are easy to start and <span className="text-slate-400">easy to forget.</span>
+              </h2>
+              <p className="text-lg text-slate-600 leading-relaxed">
+                Companies count on you forgetting to cancel. They make the signup 1-click and the cancellation a 10-step obstacle course. TrialLock flips the script.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link href="/request-card" className="bg-primary text-center text-white px-8 py-4 rounded-xl text-lg font-bold hover:scale-[1.02] transition-transform shadow-xl shadow-primary/20">
-                  Get Your Trial Card
-                </Link>
-                <Link href="/how-it-works" className="bg-white text-center dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-xl text-lg font-bold hover:bg-slate-50 transition-colors">
-                  See how it works
-                </Link>
-              </div>
-              <div className="flex items-center gap-6 pt-4 text-slate-500">
-                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-green-500">check_circle</span> <span className="text-sm font-medium">No hidden fees</span></div>
-                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-green-500">check_circle</span> <span className="text-sm font-medium">Instant setup</span></div>
-              </div>
-            </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="absolute -inset-4 bg-gradient-to-tr from-accent/20 to-transparent blur-3xl opacity-50"></div>
-              <div className="relative bg-primary rounded-3xl p-8 aspect-[1.58/1] shadow-2xl flex flex-col justify-between overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full -mr-20 -mt-20 blur-2xl"></div>
-
-                <div className="flex justify-between items-start">
-                  <span className="material-symbols-outlined text-white/50 text-4xl">contactless</span>
-                  <div className="text-white font-bold tracking-widest text-xl">TrialLock</div>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="text-white text-3xl font-mono tracking-[0.2em]">4532 9901 2284 ••••</div>
-                  <div className="flex gap-12 text-white/70">
-                    <div className="flex flex-col">
-                      <span className="text-[10px] uppercase font-bold tracking-widest">Expiry</span>
-                      <span className="text-sm font-mono">12/26</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[10px] uppercase font-bold tracking-widest">CVV</span>
-                      <span className="text-sm font-mono">***</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-end">
-                  <div className="text-white/40 text-xs font-medium uppercase tracking-widest">Virtual Trial Card</div>
-                  <div className="bg-accent h-8 w-12 rounded-md"></div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* How It Works */}
-        <section className="py-24 bg-white dark:bg-slate-900/50">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-20">
-              <h2 className="text-3xl md:text-5xl font-black text-primary dark:text-white mb-6">Simple 3-step protection</h2>
-              <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">Our system is designed for maximum simplicity. Stay in control of your subscriptions without the manual tracking.</p>
+              <ul className="space-y-4 pt-4">
+                <li className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-red-500">cancel</span>
+                  <span className="text-slate-700 font-medium">No more &quot;oops&quot; charges on your bank statement.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-red-500">cancel</span>
+                  <span className="text-slate-700 font-medium">No more digging for cancellation buttons in settings.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-red-500">cancel</span>
+                  <span className="text-slate-700 font-medium">No more sharing your real card with every website.</span>
+                </li>
+              </ul>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12 relative">
-              <div className="absolute top-1/2 left-0 w-full h-px bg-slate-100 dark:bg-slate-800 hidden md:block -translate-y-1/2 -z-10"></div>
-
-              <motion.div
-                whileHover={{ y: -10 }}
-                className="bg-background-light dark:bg-slate-800/50 p-8 rounded-2xl flex flex-col items-center text-center gap-6"
-              >
-                <div className="w-16 h-16 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20">
-                  <span className="material-symbols-outlined text-3xl">add_card</span>
+            <div className="lg:w-1/2 relative w-full">
+              <div className="bg-slate-900 rounded-2xl p-8 shadow-2xl relative z-10">
+                <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+                  <div className="text-white font-bold">Billing Alert</div>
+                  <div className="text-slate-400 text-sm">Just now</div>
                 </div>
-                <h3 className="text-xl font-bold">1. Create card</h3>
-                <p className="text-slate-600 dark:text-slate-400">Instantly generate your unique virtual card in one click.</p>
-              </motion.div>
 
-              <motion.div
-                whileHover={{ y: -10 }}
-                className="bg-background-light dark:bg-slate-800/50 p-8 rounded-2xl flex flex-col items-center text-center gap-6"
-              >
-                <div className="w-16 h-16 rounded-2xl bg-accent text-white flex items-center justify-center shadow-lg shadow-accent/20">
-                  <span className="material-symbols-outlined text-3xl">shopping_cart</span>
-                </div>
-                <h3 className="text-xl font-bold">2. Use for trial</h3>
-                <p className="text-slate-600 dark:text-slate-400">Enter card details on any trial checkout. It locks to that merchant instantly.</p>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ y: -10 }}
-                className="bg-background-light dark:bg-slate-800/50 p-8 rounded-2xl flex flex-col items-center text-center gap-6"
-              >
-                <div className="w-16 h-16 rounded-2xl bg-green-500 text-white flex items-center justify-center shadow-lg shadow-green-500/20">
-                  <span className="material-symbols-outlined text-3xl">block</span>
-                </div>
-                <h3 className="text-xl font-bold">3. We block the charge</h3>
-                <p className="text-slate-600 dark:text-slate-400">We automatically decline any renewal attempts after the trial period ends.</p>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Why TrialLock */}
-        <section className="py-24 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid lg:grid-cols-2 gap-20 items-center">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-6 h-48 flex flex-col justify-end">
-                    <span className="material-symbols-outlined text-accent mb-4">bolt</span>
-                    <h4 className="font-bold">Instant</h4>
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="bg-red-500/20 p-2 rounded-lg text-red-500">
+                    <span className="material-symbols-outlined">block</span>
                   </div>
-                  <div className="bg-primary rounded-2xl p-6 h-64 flex flex-col justify-end">
-                    <span className="material-symbols-outlined text-white mb-4">security</span>
-                    <h4 className="font-bold text-white">Secure</h4>
+                  <div className="flex-1">
+                    <div className="text-white font-bold text-sm">Payment Blocked</div>
+                    <div className="text-slate-400 text-xs">$29.99 attempted by Netflix Inc.</div>
                   </div>
                 </div>
-                <div className="space-y-4 pt-12">
-                  <div className="bg-accent rounded-2xl p-6 h-64 flex flex-col justify-end">
-                    <span className="material-symbols-outlined text-white mb-4">refresh</span>
-                    <h4 className="font-bold text-white">Unlimited</h4>
-                  </div>
-                  <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-6 h-48 flex flex-col justify-end">
-                    <span className="material-symbols-outlined text-primary dark:text-white mb-4">lock</span>
-                    <h4 className="font-bold">Control</h4>
-                  </div>
-                </div>
-              </div>
 
-              <div className="flex flex-col gap-10">
-                <h2 className="text-3xl md:text-5xl font-black text-primary dark:text-white leading-tight">One card at a time for <span className="text-accent italic">maximum control.</span></h2>
-
-                <div className="space-y-8">
-                  <div className="flex gap-6">
-                    <div className="shrink-0 w-12 h-12 bg-white dark:bg-slate-800 rounded-xl shadow-sm flex items-center justify-center">
-                      <span className="material-symbols-outlined text-accent">published_with_changes</span>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-bold mb-1">Single-Active Model</h4>
-                      <p className="text-slate-600 dark:text-slate-400">By allowing only one active card at once, we ensure you never lose track of what you&apos;re testing. Activating a new card instantly kills the old one.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-6">
-                    <div className="shrink-0 w-12 h-12 bg-white dark:bg-slate-800 rounded-xl shadow-sm flex items-center justify-center">
-                      <span className="material-symbols-outlined text-accent">encrypted</span>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-bold mb-1">Secure Payments</h4>
-                      <p className="text-slate-600 dark:text-slate-400">Our infrastructure uses industry-standard encryption. Your primary bank details are never shared with merchants.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-6">
-                    <div className="shrink-0 w-12 h-12 bg-white dark:bg-slate-800 rounded-xl shadow-sm flex items-center justify-center">
-                      <span className="material-symbols-outlined text-accent">speed</span>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-bold mb-1">Instant Generation</h4>
-                      <p className="text-slate-600 dark:text-slate-400">Need a trial now? Generate details in 2 seconds and paste them into any checkout.</p>
-                    </div>
-                  </div>
+                <div className="mt-6 text-center text-accent text-sm font-bold">
+                  TrialLock prevented this charge.
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Features Grid */}
-        <section className="py-24 bg-primary text-white rounded-[3rem] mx-6">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-black mb-6">Built for the subscription era.</h2>
-              <p className="text-slate-400 max-w-2xl mx-auto text-lg">Advanced features that make digital hoarding a thing of the past.</p>
+      {/* How It Works */}
+      <section className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <h2 className="text-4xl font-black tracking-tight">Three steps to peace of mind</h2>
+            <p className="text-slate-600">The simplest way to manage your subscriptions.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm space-y-4 group hover:border-accent transition-colors">
+              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent font-bold text-xl group-hover:bg-accent group-hover:text-white transition-all">1</div>
+              <h3 className="text-xl font-bold">Generate</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">Create a unique virtual card for any new free trial in one click.</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <motion.div whileHover={{ scale: 1.05 }} className="bg-white/5 border border-white/10 p-10 rounded-3xl cursor-default transition-colors">
-                <div className="w-12 h-12 bg-accent rounded-xl mb-8 flex items-center justify-center">
-                  <span className="material-symbols-outlined">lock_person</span>
-                </div>
-                <h3 className="text-xl font-bold mb-4">Merchant-Locked</h3>
-                <p className="text-slate-400 leading-relaxed">Once you use a card at a merchant, it&apos;s locked to them. No other merchant can use those details, ever.</p>
-              </motion.div>
+            <div className="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm space-y-4 group hover:border-accent transition-colors">
+              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent font-bold text-xl group-hover:bg-accent group-hover:text-white transition-all">2</div>
+              <h3 className="text-xl font-bold">Start Trial</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">Use the TrialLock card details to sign up. No need to worry about the expiration date.</p>
+            </div>
 
-              <motion.div whileHover={{ scale: 1.05 }} className="bg-white/5 border border-white/10 p-10 rounded-3xl cursor-default transition-colors">
-                <div className="w-12 h-12 bg-accent rounded-xl mb-8 flex items-center justify-center">
-                  <span className="material-symbols-outlined">restart_alt</span>
-                </div>
-                <h3 className="text-xl font-bold mb-4">Unlimited Regeneration</h3>
-                <p className="text-slate-400 leading-relaxed">Cancel and regenerate your single active card as many times as you need. Perfect for testing multiple services.</p>
-              </motion.div>
-
-              <motion.div whileHover={{ scale: 1.05 }} className="bg-white/5 border border-white/10 p-10 rounded-3xl cursor-default transition-colors">
-                <div className="w-12 h-12 bg-accent rounded-xl mb-8 flex items-center justify-center">
-                  <span className="material-symbols-outlined">security_update_good</span>
-                </div>
-                <h3 className="text-xl font-bold mb-4">Auto-Blocking</h3>
-                <p className="text-slate-400 leading-relaxed">Our AI detects recurring billing patterns and automatically declines them. You don&apos;t have to lift a finger.</p>
-              </motion.div>
+            <div className="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm space-y-4 group hover:border-accent transition-colors">
+              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent font-bold text-xl group-hover:bg-accent group-hover:text-white transition-all">3</div>
+              <h3 className="text-xl font-bold">Block Renewal</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">The card automatically disables after the trial period ends. Charge blocked, mission accomplished.</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Pricing Section */}
-        <section className="py-32">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-xl mx-auto text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-black text-primary dark:text-white mb-6">Simple, honest pricing.</h2>
-              <p className="text-slate-600 dark:text-slate-400 text-lg">One plan. Everything included. Unlimited peace of mind.</p>
-            </div>
+      {/* Referral Waitlist */}
+      <section className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="bg-primary rounded-3xl p-10 lg:p-16 text-white text-center relative overflow-hidden">
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
 
-            <div className="max-w-md mx-auto relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-accent to-blue-600 rounded-3xl blur opacity-25"></div>
-              <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 shadow-xl">
-                <div className="flex justify-between items-center mb-8">
-                  <span className="px-4 py-1 bg-accent/10 text-accent text-sm font-bold rounded-full">TrialLock Pro</span>
-                  <div className="text-right">
-                    <span className="text-4xl font-black text-primary dark:text-white">€9</span>
-                    <span className="text-slate-500 font-medium">/month</span>
-                  </div>
+            <div className="relative z-10 space-y-8">
+              <h2 className="text-3xl lg:text-5xl font-black tracking-tight">Move up the list</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto text-lg">Invite friends to join the waitlist and get early access to the TrialLock beta.</p>
+
+              <div className="grid sm:grid-cols-3 gap-6 text-left max-w-3xl mx-auto mt-12">
+                <div className="bg-white/5 border border-white/10 p-6 rounded-2xl">
+                  <div className="text-accent font-bold text-lg mb-1">1 Friend</div>
+                  <p className="text-xs text-slate-300">Move up 100 spots in the queue</p>
                 </div>
-
-                <ul className="space-y-5 mb-10">
-                  <li className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-accent text-xl">check_circle</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-300">1 active card at a time</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-accent text-xl">check_circle</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-300">Unlimited card regeneration</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-accent text-xl">check_circle</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-300">Secure merchant-locked payments</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-accent text-xl">check_circle</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-300">Renewal protection engine</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-accent text-xl">check_circle</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-300">Global merchant support</span>
-                  </li>
-                </ul>
-
-                <Link href="/login" className="block text-center w-full bg-primary text-white py-4 rounded-xl text-lg font-bold hover:scale-[1.02] hover:bg-slate-800 transition-all shadow-lg shadow-primary/20">
-                  Start Your Free Trial Card
-                </Link>
-                <p className="text-center text-xs text-slate-400 mt-6">Secure billing by Stripe. Cancel anytime.</p>
+                <div className="bg-white/5 border border-white/10 p-6 rounded-2xl ring-1 ring-accent">
+                  <div className="text-accent font-bold text-lg mb-1">3 Friends</div>
+                  <p className="text-xs text-slate-300">Priority Beta access invitation</p>
+                </div>
+                <div className="bg-white/5 border border-white/10 p-6 rounded-2xl">
+                  <div className="text-accent font-bold text-lg mb-1">5 Friends</div>
+                  <p className="text-xs text-slate-300">Guaranteed access + 1 year Premium</p>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Trust & Security */}
-        <section className="pb-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="bg-slate-50 dark:bg-slate-800/30 rounded-[2rem] p-12 flex flex-col md:flex-row items-center gap-12 border border-slate-100 dark:border-slate-800">
-              <div className="flex flex-wrap justify-center gap-8 md:w-1/2">
-                <div className="flex flex-col items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
-                  <span className="material-symbols-outlined text-4xl mb-2">admin_panel_settings</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest">PCI-DSS COMPLIANT</span>
-                </div>
-                <div className="flex flex-col items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
-                  <span className="material-symbols-outlined text-4xl mb-2">encrypted</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest">256-BIT AES</span>
-                </div>
-                <div className="flex flex-col items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
-                  <span className="material-symbols-outlined text-4xl mb-2">verified_user</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest">SCA READY</span>
-                </div>
-              </div>
-              <div className="md:w-1/2 border-l border-slate-200 dark:border-slate-700 md:pl-12">
-                <h3 className="text-2xl font-bold mb-4">Your money is safe.</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">We use Stripe&apos;s banking-as-a-service infrastructure to issue cards. Your data is encrypted end-to-end, and we never have access to your primary bank credentials.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+      {/* Final CTA */}
+      <section className="py-24 bg-slate-50 border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-4xl lg:text-5xl font-black tracking-tight mb-8">Ready to reclaim your subscriptions?</h2>
+          <p className="text-xl text-slate-600 mb-12">Join {stats.totalCount} others who are already signed up for a stress-free trial experience.</p>
 
-        {/* FAQ */}
-        <section className="py-24 bg-white dark:bg-slate-900/50">
-          <div className="max-w-3xl mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-black text-center mb-16">Frequently Asked Questions</h2>
-            <div className="space-y-6">
-              <div className="group border-b border-slate-200 dark:border-slate-800 pb-6">
-                <div className="flex justify-between items-center cursor-pointer">
-                  <h4 className="text-lg font-bold">Why only one card at a time?</h4>
-                  <span className="material-symbols-outlined group-hover:text-accent transition-colors">expand_more</span>
-                </div>
-                <p className="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed">To ensure maximum security and simplicity. By focusing on one active trial at a time, we help you avoid &quot;subscription creep.&quot; It forces intentionality in how you test services.</p>
-              </div>
-              <div className="group border-b border-slate-200 dark:border-slate-800 pb-6">
-                <div className="flex justify-between items-center cursor-pointer">
-                  <h4 className="text-lg font-bold">What happens when I generate a new card?</h4>
-                  <span className="material-symbols-outlined group-hover:text-accent transition-colors">expand_more</span>
-                </div>
-                <p className="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed">The previous card is instantly and permanently deactivated. Any further charge attempts on that old card will be rejected by our network.</p>
-              </div>
-              <div className="group border-b border-slate-200 dark:border-slate-800 pb-6">
-                <div className="flex justify-between items-center cursor-pointer">
-                  <h4 className="text-lg font-bold">What is &quot;Merchant-Locked&quot;?</h4>
-                  <span className="material-symbols-outlined group-hover:text-accent transition-colors">expand_more</span>
-                </div>
-                <p className="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed">The first merchant to run a transaction (even a €0.00 authorization) on your card &quot;claims&quot; it. The card will then only work for that specific merchant, preventing data theft or accidental charges from other sources.</p>
-              </div>
-            </div>
+          <div className="flex justify-center">
+            <Link href="#join" className="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-primary/20">
+              Join Waitlist Now
+            </Link>
           </div>
-        </section>
-      </main>
+          <p className="mt-4 text-xs text-slate-400">No credit card required to join the waitlist.</p>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="bg-slate-50 dark:bg-background-dark py-20 border-t border-slate-200 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12 mb-16">
-            <div className="col-span-2">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="bg-primary text-white p-1.5 rounded-lg">
-                  <span className="material-symbols-outlined block">shield_lock</span>
-                </div>
-                <span className="text-xl font-bold tracking-tight text-primary dark:text-white">TrialLock</span>
-              </div>
-              <p className="text-slate-500 max-w-sm mb-6">The ultimate tool for the modern consumer. Don&apos;t let subscriptions manage you—take back control of your trials.</p>
-              <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center cursor-pointer hover:bg-accent hover:text-white transition-all">
-                  <span className="material-symbols-outlined text-sm">public</span>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center cursor-pointer hover:bg-accent hover:text-white transition-all">
-                  <span className="material-symbols-outlined text-sm">alternate_email</span>
-                </div>
-              </div>
+      <footer className="bg-white border-t border-slate-100 py-12">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-2">
+            <div className="bg-primary p-1.5 rounded-md">
+              <span className="material-symbols-outlined text-white text-sm">shield_lock</span>
             </div>
-            <div>
-              <h5 className="font-bold mb-6">Product</h5>
-              <ul className="space-y-4 text-sm text-slate-500">
-                <li><Link className="hover:text-accent transition-colors" href="/features">Features</Link></li>
-                <li><Link className="hover:text-accent transition-colors" href="/pricing">Pricing</Link></li>
-                <li><Link className="hover:text-accent transition-colors" href="/security">Security</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-bold mb-6">Legal</h5>
-              <ul className="space-y-4 text-sm text-slate-500">
-                <li><Link className="hover:text-accent transition-colors" href="/privacy-policy">Privacy Policy</Link></li>
-                <li><Link className="hover:text-accent transition-colors" href="/terms-of-service">Terms of Service</Link></li>
-                <li><Link className="hover:text-accent transition-colors" href="/cookie-policy">Cookie Policy</Link></li>
-              </ul>
-            </div>
+            <span className="text-sm font-bold tracking-tight text-primary">TrialLock</span>
           </div>
-          <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-400 uppercase tracking-widest">
-            <span>© 2026 TrialLock Technologies Inc.</span>
-            <div className="flex gap-8">
-              <span>Built with ❤️ for savers</span>
-              <span>Status: All systems operational</span>
-            </div>
+          <div className="text-slate-400 text-xs font-medium">
+            © 2026 TrialLock. All rights reserved.
+          </div>
+          <div className="flex gap-6 text-xs font-bold text-slate-600 uppercase tracking-widest">
+            <a className="hover:text-accent transition-colors" href="#">Privacy</a>
+            <a className="hover:text-accent transition-colors" href="#">Terms</a>
           </div>
         </div>
       </footer>
